@@ -27,10 +27,10 @@ router.get('/api/getEntity/:id', passport.authenticate('jwt', { session: false }
         });
 });
 
-router.get('/api/getEntities', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
+router.get('/api/getEntities', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     var entityName = req.query.entityName
     if(entityName){
-        var entities = await getEntitiesBy(entityName)
+        var entities = getEntitiesBy(entityName)
         if(entities){
             res.json(entities);            
         }
