@@ -86,7 +86,7 @@ router.get('/api/findEntityLike', passport.authenticate('jwt', { session: false 
     });
 });
 
-async function getEntitiesBy(name, next){
+function getEntitiesBy(name, next){
     var entity = getEntityModel(name, next)
     return entity.find(function (err, entities) {
         if (err) {
