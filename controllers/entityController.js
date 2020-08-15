@@ -27,10 +27,10 @@ router.get('/api/getEntity/:id', passport.authenticate('jwt', { session: false }
         });
 });
 
-router.get('/api/getEntities', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+router.get('/api/getEntities', passport.authenticate('jwt', { session: false }), async function (req, res, next) {
     var entityName = req.query.entityName
     if(entityName){
-        var entities = getEntitiesBy(entityName)
+        var entities = await getEntitiesBy(entityName)
         if(entities){
             res.json(entities);            
         }
@@ -85,8 +85,7 @@ router.get('/api/findEntityLike', passport.authenticate('jwt', { session: false 
         }
     });
 });
-
-function getEntitiesBy(name, next){
+async function getEntitiesBy(name, next){
     var entity = getEntityModel(name, next)
     return entity.find(function (err, entities) {
         if (err) {
