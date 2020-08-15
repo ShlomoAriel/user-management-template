@@ -2,16 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const passport = require('passport');
 
-router.post('/api/addEntity', passport.authenticate('jwt', { session: false }), function (req, res, next) {
-    var entityModel = getEntityModel(req.body.entityName, next)
-    var entity = new entityModel(req.body.entity)
-    entity.save((err, newEntity) => {
-        if (err) {
-            return next(err);
-        }
-        res.status(200).send('OK');
-    });
-});
+router.post('/api/addEntity', passport.authenticate('jwt', { session: false }), addEntity);
 
 router.get('/api/getEntity/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     var entity = getEntityModel(req.query.entityName, next)   
@@ -39,18 +30,24 @@ router.get('/api/getEntities', passport.authenticate('jwt', { session: false }),
 
 router.put('/api/updateEntity', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     var entity = getEntityModel(req.body.entityName, next)
-    entity.findOneAndUpdate(
-        { _id: req.body.entity._id },
-        req.body.entity,
-        { upsert: true , new: true, returnOriginal: false},
-        function (err, newEntity) {
-            if (err) {
-                next('Error updating Entity\n' + err);
-            }
-            else {
-                res.json(newEntity);
-            }
-        });
+    if (req.body.entity._id == null || req.body.entity._id == undefined){
+        addEntity(req, res, next)
+    } else {
+        const filter = { _id: req.body.entity._id };
+        const update = req.body.entity;
+        entity.findOneAndUpdate( filter, update, { 
+            new: true,
+            upsert: true , returnOriginal: false
+        },
+            function (err, newEntity) {
+                if (err) {
+                    next('Error updating Entity\n' + err);
+                }
+                else {
+                    res.json(newEntity);
+                }
+            });
+    }
 });
 
 router.delete('/api/deleteEntity/:id/:entityName', passport.authenticate('jwt', { session: false }), function (req, res, next) {
@@ -110,4 +107,16 @@ function getEntityModel(name, next){
     }
     return entity
 }
+
+function addEntity(req, res, next) {
+    var entityModel = getEntityModel(req.body.entityName, next)
+    var entity = new entityModel(req.body.entity)
+    entity.save((err, newEntity) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(200).send('OK');
+    });
+}
+
     module.exports = router
