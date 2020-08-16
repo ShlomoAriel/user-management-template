@@ -3,8 +3,9 @@ var Schema = mongoose.Schema;
 
 var matchSchema = new Schema({
     date: { type: Date, required: true},
-    homeGoals: { type: Number, required: true},
-    awayGoals: { type: Number, required: true},
+    played: { type: Boolean, default: false},
+    homeGoals: { type: Number, default: 0},
+    awayGoals: { type: Number, default: 0},
     homeTeam:{ type: Schema.ObjectId, ref: 'Team', required: true },
     awayTeam:{ type: Schema.ObjectId, ref: 'Team', required: true },
     week:{ type: Schema.ObjectId, ref: 'Week', required: true },
