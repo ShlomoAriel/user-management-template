@@ -53,7 +53,7 @@ router.put('/api/upsert/:entityName/:id?', passport.authenticate('jwt', { sessio
     }
 });
 
-router.delete('/api/delete2/:entityName/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+router.delete('/api/delete/:entityName/:id', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     if (!req.params.entityName || !req.params.id) {
         next('Error deleting Entity\n' + err);
     }
