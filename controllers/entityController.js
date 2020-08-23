@@ -76,22 +76,47 @@ router.delete('/api/delete/:entityName/:id', passport.authenticate('jwt', { sess
         });
 });
 
-router.get('/api/find/:entityName', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+router.post('/api/find/:entityName', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     var entity = getEntityModel(req.params.entityName, next)
-    if(req.query.q == null || req.query.q == undefined || req.query.q == '') {
+    if(req.body == null || req.body == undefined || req.body == '') {
         res.status(400).json({status:400})
         return 
     }
 
-    entity.find({'name' : new RegExp(req.query.q, 'i')}, function (err, entities) {
-        if (err) {
-            next('find no good' + err);
-        }
-        else {
-            
-            res.json(entities);
-        }
+    var filter = {}
+    Object.keys(req.body.filter).forEach(function(key) {
+        if(req.body.type == 'like') {
+            filter[key] = new RegExp(req.body.filter[key], 'i')
+        } else if (req.body.type == 'exactly') {
+            filter[key] = req.body.filter[key]
+        } 
     });
+
+    require('../models/Player')
+    require('../models/Team')
+    require('../models/Season')
+    
+
+    entity.find(filter).
+        populate('players season team').
+        exec(function (err, story) {
+            if (err) {
+                next('find no good' + err);
+            }
+            console.log('The author is %s', story);
+            res.json({result:story})
+        // prints "The author is Ian Fleming"
+    });
+
+    // entity.find(filter, function (err, entities) {
+    //     if (err) {
+    //         next('find no good' + err);
+    //     }
+    //     else {
+            
+    //         res.json(entities);
+    //     }
+    // }).populate('Season')
 });
 
 async function getEntitiesBy(name, next){
