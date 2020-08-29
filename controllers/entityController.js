@@ -47,7 +47,8 @@ router.put('/api/upsert/:entityName/:id?', passport.authenticate('jwt', { sessio
                     next('Error updating Entity\n' + err);
                 }
                 else {
-                    res.json(newEntity);
+                    res.status(200).json({status:200})
+                    // res.json(newEntity);
                 }
             });
     }
