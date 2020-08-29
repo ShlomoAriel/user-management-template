@@ -70,4 +70,20 @@ router.get('/api/get/SeasonTeam/Player/:id', passport.authenticate('jwt', { sess
         });
 });
 
+router.get('/api/getMatchfull', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    var team = require('../models/Team')
+    var match = require('../models/Match')
+    match.find()
+    .populate('homeTeam awayTeam')
+        .exec(function (err, entities) {
+            if (err) {
+                next('error retriving entity\n' + err);
+            }
+            else {
+                console.log(entities);
+                res.json({"result":entities});
+            }
+        });
+});
+
 module.exports = router
