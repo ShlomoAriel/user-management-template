@@ -24,7 +24,11 @@ router.get('/api/get/:entityName', passport.authenticate('jwt', { session: false
         var entities = await getEntitiesBy(entityName, next)
         if(entities){
             res.json({"result":entities});            
+        } else {
+            next('Error Get Entities By ' + entityName + '\n');
         }
+    } else {
+        next('Error Get Entity Name: ' + entityName + '\n');
     }
 });
 
