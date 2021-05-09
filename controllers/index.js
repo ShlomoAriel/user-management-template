@@ -3,5 +3,6 @@ var express = require('express')
 
 // router.use('/', require('./contentController'))
 router.use('/', require('./entityController'))
+router.use('/', require('./publicController'))
 router.use('/', require('./seasonController'))
 module.exports = router
