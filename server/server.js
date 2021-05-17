@@ -9,7 +9,7 @@ const configMiddleware = require('./middleware');
 var config = require('./config/database'); // get db config file
 configMiddleware(app);
 
-mongoose.connect(config.database, { useMongoClient: true });
+mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 var db = mongoose.connection;
 userManagement.init(app, { db, secret: config.secret });
 
