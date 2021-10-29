@@ -31,31 +31,31 @@ router.get('/api/getPublic/:entityName', async function (req, res, next) {
     }
 });
 
-// router.put('/api/upsertPublic/:entityName/:id?', function (req, res, next) {
-//     if (!req.params.entityName) {
-//         next('Error updating Entity\n' + err);
-//     }
-//     var entity = getEntityModel(req.params.entityName, next)
-//     if (req.params.id == null || req.params.id == undefined){
-//         addEntity(req, res, next)
-//     } else {
-//         const filter = { _id: req.params.id };
-//         const update = req.body.entity;
-//         entity.findOneAndUpdate( filter, update, { 
-//             new: true,
-//             upsert: true , returnOriginal: false
-//         },
-//             function (err, newEntity) {
-//                 if (err) {
-//                     next('Error updating Entity\n' + err);
-//                 }
-//                 else {
-//                     res.status(200).json({status:200})
-//                     // res.json(newEntity);
-//                 }
-//             });
-//     }
-// });
+router.put('/api/upsertPublic/:entityName', function (req, res, next) {
+    if (!req.params.entityName) {
+        next('Error updating Entity\n' + err);
+    }
+    var entity = getEntityModel(req.params.entityName, next)
+    if (req.params.id == null || req.params.id == undefined){
+        addEntity(req, res, next)
+    } else {
+        const filter = { _id: req.params.id };
+        const update = req.body.entity;
+        entity.findOneAndUpdate( filter, update, { 
+            new: true,
+            upsert: true , returnOriginal: false
+        },
+            function (err, newEntity) {
+                if (err) {
+                    next('Error updating Entity\n' + err);
+                }
+                else {
+                    res.status(200).json({status:200})
+                    // res.json(newEntity);
+                }
+            });
+    }
+});
 
 // router.delete('/api/deletePublic/:entityName/:id', function (req, res, next) {
 //     if (!req.params.entityName || !req.params.id) {
@@ -162,27 +162,27 @@ function getEntityModel(name, next){
     return entity
 }
 
-// function addEntity(req, res, next) {
-//     var entityModel = getEntityModel(req.params.entityName, next)
-//     var entity = new entityModel(req.body.entity)
-//     entity.save((err, newEntity) => {
-//         if (err) {
-//             return next(err);
-//         }
-//         res.status(200).send('OK');
-//     });
-// }
+function addEntity(req, res, next) {
+    var entityModel = getEntityModel(req.params.entityName, next)
+    var entity = new entityModel(req.body.entity)
+    entity.save((err, newEntity) => {
+        if (err) {
+            return next(err);
+        }
+        res.status(200).send('OK');
+    });
+}
 
-// router.put('/api/addToEntityPublic', async function (req, res, next) {
-//     var mainEntity = await getEntitiesById(req.body.secondaryEntity.name, req.body.secondaryEntity.id)
-//     console.log(entity[req.body.collectionName])
-//     mainEntity[req.body.collectionName].push(req.body.mainEntity)
-//     mainEntity.save(function(err, doc){
-//         if(err) {
-//             res.status(400).send(err.stack)
-//         }
-//         res.status(200).send(doc)
-//     })
-// })
+router.put('/api/addToEntityPublic', async function (req, res, next) {
+    var mainEntity = await getEntitiesById(req.body.secondaryEntity.name, req.body.secondaryEntity.id)
+    console.log(entity[req.body.collectionName])
+    mainEntity[req.body.collectionName].push(req.body.mainEntity)
+    mainEntity.save(function(err, doc){
+        if(err) {
+            res.status(400).send(err.stack)
+        }
+        res.status(200).send(doc)
+    })
+})
 
 module.exports = router
