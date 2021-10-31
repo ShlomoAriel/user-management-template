@@ -31,7 +31,7 @@ router.get('/api/getPublic/:entityName', async function (req, res, next) {
     }
 });
 
-router.put('/api/upsertPublic/:entityName', function (req, res, next) {
+router.put('/api/upsertPublic/:entityName/:id?', function (req, res, next) {
     if (!req.params.entityName) {
         next('Error updating Entity\n' + err);
     }
