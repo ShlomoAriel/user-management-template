@@ -1,9 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var sponserSchema = new Schema({
+var sponsorSchema = new Schema({
     name: { type: String, required: true},
     imageURL: { type: String}
 });
-var Sponser = mongoose.model('Sponser', sponserSchema);
-module.exports = Sponser;
+var Sponsor = mongoose.model('Sponsor', sponsorSchema);
+module.exports = Sponsor;
